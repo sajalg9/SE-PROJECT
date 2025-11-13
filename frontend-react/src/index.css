@@ -1,0 +1,70 @@
+/* ==== GLOBAL RESET ==== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ==== BASE STYLES ==== */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  color: #111827;
+  scroll-behavior: smooth;
+}
+
+/* ==== LINK STYLES ==== */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ==== IMAGE STYLING ==== */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ==== BUTTON RESET ==== */
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+/* ==== CONTAINER HELPERS ==== */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* ==== SCROLLBAR STYLING ==== */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #1e1b4b;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #3730a3;
+}
+
+/* ==== ROOT ELEMENT ==== */
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
