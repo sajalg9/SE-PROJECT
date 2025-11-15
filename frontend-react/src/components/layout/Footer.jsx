@@ -97,7 +97,7 @@ export default function Footer() {
         >
           <Typography variant="body2" color="gray.400" display="flex" justifyContent="center" alignItems="center" gap={0.5}>
             © {new Date().getFullYear()} IR Object Detection Platform. Made with{" "}
-            <Heart size={16} fill={colors.burntSienna} color={colors.burntSienna} /> by SE Team
+            <Heart size={16} fill={colors.burntSienna} color={colors.burntSienna} /> by PEC Team
           </Typography>
         </Box>
       </Container>
