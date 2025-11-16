@@ -117,7 +117,7 @@ export default function About() {
           </Typography>
           <Grid container spacing={3} mb={8} justifyContent="center">
             {features.map((feature, i) => (
-              <Grid item xs={12} sm={6} md={4} key={i}>
+              <Grid item  key={i}>
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}

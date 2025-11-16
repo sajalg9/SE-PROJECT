@@ -63,36 +63,74 @@ export default function Upload() {
     setIsDragging(false);
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (selectedFile) {
       setIsProcessing(true);
       toast.loading("Processing image...", { id: "processing" });
 
-      // Simulate AI processing
-      setTimeout(() => {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/predict', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to process image');
+        }
+
+        const data = await response.json();
+
         setIsProcessing(false);
         toast.success("Detection complete!", { id: "processing" });
-        
-        // Mock results
-        setResults({
-          objectsDetected: Math.floor(Math.random() * 5) + 1,
-          confidence: (Math.random() * 15 + 85).toFixed(1),
-          processingTime: (Math.random() * 1.5 + 0.5).toFixed(2),
-          detections: [
-            { object: "Person", confidence: 94.2, x: 120, y: 80 },
-            { object: "Vehicle", confidence: 89.7, x: 300, y: 150 },
-            { object: "Animal", confidence: 87.3, x: 450, y: 200 },
-          ].slice(0, Math.floor(Math.random() * 3) + 1),
-        });
-      }, 2500);
+
+        // Process real results
+              setResults({
+        objectsDetected: data.detections.length,
+        confidence:
+          data.detections.length > 0
+            ? (
+                (data.detections.reduce((sum, d) => sum + d.confidence, 0) /
+                  data.detections.length) *
+                100
+              ).toFixed(1)
+            : 0,
+        processingTime: "N/A",
+        detections: data.detections.map((d) => ({
+          object: d.class_name,
+          confidence: (d.confidence * 100).toFixed(1),
+          x: d.bbox[0],
+          y: d.bbox[1],
+        })),
+        annotatedImage: data.annotated_image, // 👈 BASE64 IMAGE HERE
+      });
+
+      } catch (error) {
+        setIsProcessing(false);
+        toast.error("Error processing image: " + error.message, { id: "processing" });
+        console.error('Upload error:', error);
+      }
     } else {
       toast.error("Please select an image first");
     }
   };
 
-  const handleDownload = () => {
-    toast.success("Results downloaded!");
-  };
+      const handleDownload = () => {
+        if (!results?.annotatedImage) {
+          toast.error("No image to download");
+          return;
+        }
+
+        const link = document.createElement("a");
+        link.href = results.annotatedImage;
+        link.download = "annotated_image.jpg";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      };
+
 
   return (
     <Box
@@ -306,6 +344,29 @@ export default function Upload() {
                         </Box>
                       </Grid>
                     </Grid>
+
+                    {/* Annotated Image */}
+                    {results.annotatedImage && (
+                      <Box mb={3}>
+                        <Typography
+                          variant="h6"
+                          fontWeight="bold"
+                          mb={2}
+                          color={isDark ? darkColors.text : colors.charcoal}
+                        >
+                          Annotated Image
+                        </Typography>
+                        <img
+                          src={results.annotatedImage}
+                          alt="Annotated Detection"
+                          style={{
+                            maxWidth: "100%",
+                            borderRadius: 8,
+                            border: `2px solid ${colors.saffron}`,
+                          }}
+                        />
+                      </Box>
+                    )}
 
                     {/* Detected Objects */}
                     <Typography
